@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pix2PDF — Studio Grade JPG to PDF Converter</title>
+  <meta name="description" content="Fast, private, and client-side JPG to PDF converter. Reorder, rotate, adjust margins and page sizes, and convert images into a high-quality PDF in seconds.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Background Glow Accents -->
+  <div class="bg-mesh" aria-hidden="true">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+  </div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <circle cx="10" cy="13" r="2"></circle>
+            <path d="m20 17-3.5-3.5a1.5 1.5 0 0 0-2.12 0L8 20"></path>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>Pix<span class="gradient-text">2</span>PDF</h1>
+          <p class="tagline">High-Definition Image to PDF Converter</p>
+        </div>
+      </div>
+
+      <div class="header-badges">
+        <div class="badge security-badge">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span>100% Client-Side &amp; Private</span>
+        </div>
+        <button id="btn-load-sample" class="btn btn-ghost btn-sm" title="Load sample images to try the app instantly">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+          </svg>
+          <span>Try Demo Images</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="main-layout">
+      <!-- Left Column: Upload & Image Manager -->
+      <section class="content-panel">
+        
+        <!-- Drag & Drop Zone -->
+        <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload images by dropping them here or clicking browse">
+          <input type="file" id="file-input" multiple accept="image/jpeg,image/png,image/webp,image/bmp" class="file-input" />
+          <div class="dropzone-content">
+            <div class="dropzone-icon-wrapper">
+              <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+            </div>
+            <h3>Drag &amp; Drop your images here</h3>
+            <p class="dropzone-sub">Supports JPG, PNG, WEBP, and BMP &bull; High resolution supported</p>
+            <div class="dropzone-actions">
+              <button type="button" id="btn-browse" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+                <span>Browse Images</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Image Gallery Management (Visible when items added) -->
+        <div id="gallery-section" class="gallery-section hidden">
+          <div class="gallery-header">
+            <div class="gallery-title-wrapper">
+              <h2 class="section-title">Selected Pages (<span id="page-count-badge">0</span>)</h2>
+              <span class="gallery-hint">Drag cards to reorder pages</span>
+            </div>
+            <div class="gallery-toolbar">
+              <button id="btn-add-more" class="btn btn-secondary btn-sm" title="Add more images to this document">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span>Add More</span>
+              </button>
+              <button id="btn-rotate-all" class="btn btn-secondary btn-sm" title="Rotate all pages clockwise by 90 degrees">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+                </svg>
+                <span>Rotate All</span>
+              </button>
+              <button id="btn-sort-name" class="btn btn-secondary btn-sm" title="Sort pages alphabetically by file name">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18M7 12h10M10 18h4"/>
+                </svg>
+                <span>Sort A-Z</span>
+              </button>
+              <button id="btn-clear-all" class="btn btn-danger btn-sm" title="Remove all selected images">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                <span>Clear All</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Grid of Image Cards -->
+          <div id="image-grid" class="image-grid" role="list"></div>
+        </div>
+
+        <!-- Features Showcase (When empty) -->
+        <div id="empty-features" class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h4>Instant Browser Conversion</h4>
+            <p>Runs 100% on your device with high-speed rendering and zero network latency.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🛡️</div>
+            <h4>Total Privacy Guaranteed</h4>
+            <p>Your confidential photos, receipts, and scans never touch any remote server.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📐</div>
+            <h4>Full Layout Control</h4>
+            <p>Choose page formats (A4, Letter, Fit), custom margins, and smart orientation detection.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🔄</div>
+            <h4>Reorder &amp; Rotate</h4>
+            <p>Easily drag and drop pages to rearrange order and rotate misoriented photos.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Settings & Export Sidebar -->
+      <aside class="sidebar-panel">
+        <div class="sidebar-card">
+          <div class="sidebar-header">
+            <h3>Document Settings</h3>
+            <span class="badge badge-subtle">PDF Configuration</span>
+          </div>
+
+          <!-- Page Format / Size -->
+          <div class="form-group">
+            <label for="setting-page-size" class="form-label">
+              <span>Page Format</span>
+              <span class="info-tip" title="Choose the standard paper size or let it fit image dimensions automatically">ⓘ</span>
+            </label>
+            <div class="select-wrapper">
+              <select id="setting-page-size" class="form-select">
+                <option value="a4" selected>A4 (210 &times; 297 mm)</option>
+                <option value="letter">US Letter (8.5 &times; 11 in)</option>
+                <option value="legal">US Legal (8.5 &times; 14 in)</option>
+                <option value="fit">Fit to Image Size (Borderless)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Page Orientation -->
+          <div class="form-group">
+            <label class="form-label">
+              <span>Page Orientation</span>
+            </label>
+            <div class="segmented-control" role="radiogroup" aria-label="Page Orientation">
+              <button type="button" class="segment-btn active" data-orientation="auto" role="radio" aria-checked="true">
+                <span>Auto</span>
+              </button>
+              <button type="button" class="segment-btn" data-orientation="portrait" role="radio" aria-checked="false">
+                <span>Portrait</span>
+              </button>
+              <button type="button" class="segment-btn" data-orientation="landscape" role="radio" aria-checked="false">
+                <span>Landscape</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Margins -->
+          <div class="form-group">
+            <label class="form-label">
+              <span>Page Margins</span>
+            </label>
+            <div class="segmented-control" role="radiogroup" aria-label="Page Margins">
+              <button type="button" class="segment-btn active" data-margin="none" role="radio" aria-checked="true">
+                <span>None (0mm)</span>
+              </button>
+              <button type="button" class="segment-btn" data-margin="small" role="radio" aria-checked="false">
+                <span>Small (5mm)</span>
+              </button>
+              <button type="button" class="segment-btn" data-margin="standard" role="radio" aria-checked="false">
+                <span>Std (12mm)</span>
+              </button>
+              <button type="button" class="segment-btn" data-margin="large" role="radio" aria-checked="false">
+                <span>Wide (20mm)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Scaling / Image Fit -->
+          <div class="form-group" id="fit-container">
+            <label for="setting-fit-mode" class="form-label">
+              <span>Image Fit Mode</span>
+            </label>
+            <div class="select-wrapper">
+              <select id="setting-fit-mode" class="form-select">
+                <option value="contain" selected>Contain (Preserve ratio, center page)</option>
+                <option value="cover">Cover (Fill page without white space)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Compression / Quality -->
+          <div class="form-group">
+            <label for="setting-quality" class="form-label">
+              <span>Quality &amp; Compression</span>
+              <span id="quality-label" class="badge badge-accent">High (92%)</span>
+            </label>
+            <div class="select-wrapper">
+              <select id="setting-quality" class="form-select">
+                <option value="original">Original / Maximum (No recompression)</option>
+                <option value="high" selected>High Quality (92% - Recommended)</option>
+                <option value="medium">Balanced (80% - Smaller size)</option>
+                <option value="low">Compact (60% - Web &amp; Email friendly)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Output File Name -->
+          <div class="form-group">
+            <label for="output-filename" class="form-label">
+              <span>Output Filename</span>
+            </label>
+            <div class="filename-input-group">
+              <input type="text" id="output-filename" class="form-input" value="converted_document" placeholder="converted_document" />
+              <span class="file-ext">.pdf</span>
+              <button type="button" id="btn-add-date" class="btn btn-ghost btn-xs" title="Append current date stamp">
+                + Date
+              </button>
+            </div>
+          </div>
+
+          <!-- Conversion Summary -->
+          <div class="summary-box">
+            <div class="summary-row">
+              <span class="summary-label">Total Images:</span>
+              <span id="summary-count" class="summary-val">0 pages</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Estimated Output:</span>
+              <span id="summary-size" class="summary-val">0 KB</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Engine:</span>
+              <span class="summary-val text-accent">jsPDF Hardware Accel</span>
+            </div>
+          </div>
+
+          <!-- Progress Bar Container -->
+          <div id="progress-container" class="progress-container hidden">
+            <div class="progress-bar-wrapper">
+              <div id="progress-fill" class="progress-fill"></div>
+            </div>
+            <span id="progress-status" class="progress-status">Processing page 1 of 3...</span>
+          </div>
+
+          <!-- Primary Actions -->
+          <div class="sidebar-actions">
+            <button type="button" id="btn-convert-download" class="btn btn-primary btn-block btn-lg" disabled>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Convert &amp; Download PDF</span>
+            </button>
+            <button type="button" id="btn-preview-pdf" class="btn btn-secondary btn-block" disabled>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <span>Live PDF Preview</span>
+            </button>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>Pix2PDF &bull; Fast, Secure, and Private JPG to PDF Converter. All operations executed directly in your browser.</p>
+    </footer>
+  </div>
+
+  <!-- Live PDF Preview Modal Dialog -->
+  <div id="preview-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <h3 id="modal-title">Document Preview</h3>
+          <span id="preview-meta" class="badge badge-subtle">Ready to Download</span>
+        </div>
+        <div class="modal-header-actions">
+          <button type="button" id="modal-btn-download" class="btn btn-primary btn-sm">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Download Now</span>
+          </button>
+          <button type="button" id="modal-btn-close" class="btn btn-ghost btn-icon" aria-label="Close preview modal">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <iframe id="preview-iframe" title="PDF Document Preview" src="about:blank"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Dependencies & Core App Scripts -->
+  <script src="js/jspdf.umd.min.js"></script>
+  <script src="js/demo_samples.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
